@@ -10,7 +10,7 @@
   $sender_replyToken = $json_obj->events[0]->replyToken; //取得訊息的replyToken
   
   switch ($sender_txt) {
-    case "請告訴我妳的名字":  //圖文選單中連結欄位的文字
+    case "name":  //圖文選單中連結欄位的文字
 			$response = array (
 				"replyToken" => $sender_replyToken,
 				"messages" => array (
@@ -21,7 +21,7 @@
 				)
 			);
       break;
-    case "想要吃甚麼":
+    case "吃飯":
 			$line_server_url = 'https://api.line.me/v2/bot/message/reply';
 			$response = array (
 				"replyToken" => $sender_replyToken,
@@ -36,7 +36,7 @@
 				)
 			);
 			break;
-		case "你喜歡玩甚麼":
+		case "好無聊":
 			$line_server_url = 'https://api.line.me/v2/bot/message/reply';
 			$response = array (
 				"replyToken" => $sender_replyToken,
@@ -49,7 +49,7 @@
 				)
 			);
 			break;
-		case "你要從哪出發":
+		case "搭車":
 			$line_server_url = 'https://api.line.me/v2/bot/message/reply';
 			$response = array (
 				"replyToken" => $sender_replyToken,
