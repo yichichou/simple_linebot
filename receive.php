@@ -1,5 +1,5 @@
 <?php
- $json_str = file_get_contents('php://input'); //接收request的body
+$json_str = file_get_contents('php://input'); //接收request的body
   $json_obj = json_decode($json_str); //轉成json格式
   
   $myfile = fopen("log.txt", "w+") or die("Unable to open file!"); //設定一個log.txt來印訊息
@@ -43,31 +43,6 @@
 			"maxResults" => 1
 		  )
 		)
-	  )
-	)
-  );
-
-  //google vision api的金鑰
-  $ch = curl_init('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCiyGiCfjzzPR1JS8PrAxcsQWHdbycVwmg');                                                                      
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
-  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                                                                  
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);                                                                                                   
-  $result = json_decode(curl_exec($ch));
-  $result_ary = mb_split("\n",$result -> responses[0] -> fullTextAnnotation -> text);
-  $ans_txt = "這張發票沒用了，你又製造了一張垃圾";
-  foreach ($result_ary as $val) {
-	if($val == "JS-07510912"){
-	  $ans_txt = "恭喜您中獎啦，快分紅!!";
-	}
-  }
-  $response = array (
-	"replyToken" => $sender_replyToken,
-	"messages" => array (
-	  array (
-		"type" => "text",
-		"text" => $ans_txt
-		"text" => $result -> responses[0] -> fullTextAnnotation -> text  //顯示所有在line上傳圖片的中文字
 	  )
 	)
   );
