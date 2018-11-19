@@ -1,5 +1,5 @@
 <?php
-$json_str = file_get_contents('php://input'); //接收request的body
+  $json_str = file_get_contents('php://input'); //接收request的body
   $json_obj = json_decode($json_str); //轉成json格式
   
   $myfile = fopen("log.txt", "w+") or die("Unable to open file!"); //設定一個log.txt來印訊息
@@ -56,7 +56,7 @@ $json_str = file_get_contents('php://input'); //接收request的body
   $result = json_decode(curl_exec($ch));
   $result_ary = mb_split("\n",$result -> responses[0] -> fullTextAnnotation -> text);
   fwrite($myfile, "\xEF\xBB\xBF".$result -> responses[0] -> fullTextAnnotation -> text);
-
+  $ans_txt = "這張發票沒用了，你又製造了一張垃圾";
 
   foreach ($result_ary as $val) {
 	if($val == "JS-07510912"){
@@ -68,10 +68,21 @@ $json_str = file_get_contents('php://input'); //接收request的body
 	"messages" => array (
 	  array (
 		"type" => "text",
-		"text" => $ans_txt
+		//"text" => $ans_txt
 		"text" => $result -> responses[0] -> fullTextAnnotation -> text  //顯示所有在line上傳圖片的中文字
 	  )
 	)
   );
-
+  
+  
+  fwrite($myfile, "\xEF\xBB\xBF".json_encode($response)); //在字串前面加上\xEF\xBB\xBF轉成utf8格式
+  $header[] = "Content-Type: application/json";
+  $header[] = "Authorization: Bearer f9J+SIcrrv+iLO/NmtQrJNaLYJZ+EKIrRm/G3c7HD9V1xij+L39EZNWwzXNgl7yM0g/fFlbFXqzOwPBurRuuytkEhRgoboIBASmDphR3Z8ORK02HZhZ4e3YOkaetKj5LY2XzuuBDuKiv4yuqv/e4yAdB04t89/1O/w1cDnyilFU=";
+  $ch = curl_init("https://api.line.me/v2/bot/message/reply");
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($response));                                                                  
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);                                                                                                   
+  $result = curl_exec($ch);
+  curl_close($ch);
 ?>
