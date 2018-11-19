@@ -1,5 +1,5 @@
 <?php
-  $json_str = file_get_contents('php://input'); //接收request的body
+ $json_str = file_get_contents('php://input'); //接收request的body
   $json_obj = json_decode($json_str); //轉成json格式
   
   $myfile = fopen("log.txt", "w+") or die("Unable to open file!"); //設定一個log.txt來印訊息
@@ -22,65 +22,4 @@
   $imagefile = fopen($imageId.".jpeg", "w+") or die("Unable to open file!");
   fwrite($imagefile, $json_content); 
   fclose($imagefile); //將圖片存在server上
-  //先在line，上傳一張圖片
-  //在瀏覽器中輸入: https://sporzfy.com/class/20181119_line/log.txt，會在裏頭顯示image type的id
-  //可以在網址上輸入: https://sporzfy.com/class/20181119_line/8884441406951.jpeg (8884441406951是image type的id )
-  
-
-
-  $header[] = "Content-Type: application/json";
-  $post_data = array (
-	"requests" => array (
-	  array (
-		"image" => array (
-		  "source" => array (
-			"imageUri" => "http://139.59.123.8/class/20181119_line/".$imageId.".jpeg"  //20181119_line是jenkins的專案
-		  )
-		),
-		"features" => array (
-		  array (
-			"type" => "TEXT_DETECTION",
-			"maxResults" => 1
-		  )
-		)
-	  )
-	)
-  );
-
-  //google vision api的金鑰
-  $ch = curl_init('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCiyGiCfjzzPR1JS8PrAxcsQWHdbycVwmg');                                                                      
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
-  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                                                                  
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);                                                                                                   
-  $result = json_decode(curl_exec($ch));
-  $result_ary = mb_split("\n",$result -> responses[0] -> fullTextAnnotation -> text);
-  $ans_txt = "這張發票沒用了，你又製造了一張垃圾";
-  foreach ($result_ary as $val) {
-	if($val == "JS-07510912"){
-	  $ans_txt = "恭喜您中獎啦，快分紅!!";
-	}
-  }
-  $response = array (
-	"replyToken" => $sender_replyToken,
-	"messages" => array (
-	  array (
-		"type" => "text",
-		"text" => $ans_txt
-		"text" => $result -> responses[0] -> fullTextAnnotation -> text  //顯示所有在line上傳圖片的中文字
-	  )
-	)
-  );
-  
-  
-  fwrite($myfile, "\xEF\xBB\xBF".json_encode($response)); //在字串前面加上\xEF\xBB\xBF轉成utf8格式
-  $header[] = "Content-Type: application/json";
-  $header[] = "Authorization: Bearer f9J+SIcrrv+iLO/NmtQrJNaLYJZ+EKIrRm/G3c7HD9V1xij+L39EZNWwzXNgl7yM0g/fFlbFXqzOwPBurRuuytkEhRgoboIBASmDphR3Z8ORK02HZhZ4e3YOkaetKj5LY2XzuuBDuKiv4yuqv/e4yAdB04t89/1O/w1cDnyilFU=";
-  $ch = curl_init("https://api.line.me/v2/bot/message/reply");
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($response));                                                                  
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);                                                                                                   
-  $result = curl_exec($ch);
-  curl_close($ch);
 ?>
