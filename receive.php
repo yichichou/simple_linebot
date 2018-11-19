@@ -56,4 +56,22 @@ $json_str = file_get_contents('php://input'); //接收request的body
   $result = json_decode(curl_exec($ch));
   $result_ary = mb_split("\n",$result -> responses[0] -> fullTextAnnotation -> text);
   fwrite($myfile, "\xEF\xBB\xBF".$result -> responses[0] -> fullTextAnnotation -> text);
+
+
+  foreach ($result_ary as $val) {
+	if($val == "JS-07510912"){
+	  $ans_txt = "恭喜您中獎啦，快分紅!!";
+	}
+  }
+  $response = array (
+	"replyToken" => $sender_replyToken,
+	"messages" => array (
+	  array (
+		"type" => "text",
+		"text" => $ans_txt
+		"text" => $result -> responses[0] -> fullTextAnnotation -> text  //顯示所有在line上傳圖片的中文字
+	  )
+	)
+  );
+
 ?>
