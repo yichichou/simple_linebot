@@ -23,7 +23,7 @@
   $header[] = "Content-Type: application/json";
 
   //line developer: "channel access token"
-  $header[] = "Authorization: Bearer MbSPmvLbZDDaKQudw3p4aAdlm9KWxKs+v0/aBnNF6ItYrBLvNr3gb5k4qPR4SNT+0g/fFlbFXqzOwPBurRuuytkEhRgoboIBASmDphR3Z8PrbwNvFaw6wdPxRtCKgoFGXzF/6WwLLbwabzYK1HFz3AdB04t89/1O/w1cDnyilFU=";
+  $header[] = "Authorization: Bearer f9J+SIcrrv+iLO/NmtQrJNaLYJZ+EKIrRm/G3c7HD9V1xij+L39EZNWwzXNgl7yM0g/fFlbFXqzOwPBurRuuytkEhRgoboIBASmDphR3Z8ORK02HZhZ4e3YOkaetKj5LY2XzuuBDuKiv4yuqv/e4yAdB04t89/1O/w1cDnyilFU=";
   $ch = curl_init("https://api.line.me/v2/bot/message/push");
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
   curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($response));                                                                  
