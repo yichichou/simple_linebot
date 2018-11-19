@@ -46,4 +46,14 @@ $json_str = file_get_contents('php://input'); //接收request的body
 	  )
 	)
   );
+
+  //google vision api的金鑰
+  $ch = curl_init('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCiyGiCfjzzPR1JS8PrAxcsQWHdbycVwmg');                                                                      
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                                                                  
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);                                                                                                   
+  $result = json_decode(curl_exec($ch));
+  $result_ary = mb_split("\n",$result -> responses[0] -> fullTextAnnotation -> text);
+  fwrite($myfile, "\xEF\xBB\xBF".$result -> responses[0] -> fullTextAnnotation -> text);
 ?>
